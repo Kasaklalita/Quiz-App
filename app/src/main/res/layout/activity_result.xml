@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="iv_trophy"
+        android:id="@+id/iv_trophy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="image"
@@ -61,6 +61,6 @@
         android:text="FINISH"
         android:textColor="@color/purple_500"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

@@ -1,28 +1,28 @@
 package com.example.quizapp
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_quiz_questions.*
-import kotlinx.android.synthetic.main.activity_quiz_questions.view.*
 
 class QuizQuestionsActivity : AppCompatActivity(), OnClickListener {
     private var mCurrentPosition: Int = 1
     private var mQuestionsList: ArrayList<Question>? = null
     private var mSelectedOptionPosition: Int = 0
-    private var mCorrectAnswer: Int = 0
+    private var mCorrectAnswers: Int = 0
+    private var mUserName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
 
+        mUserName = intent.getStringExtra(Constants.USER_NAME)
         mQuestionsList = Constants.getQuestions()
         setQuestion()
         tv_option_one.setOnClickListener(this)
@@ -35,7 +35,7 @@ class QuizQuestionsActivity : AppCompatActivity(), OnClickListener {
     private fun setQuestion() {
         val question = mQuestionsList!![mCurrentPosition - 1]
         defaultOptionsView()
-        if(mCurrentPosition == mQuestionsList!!.size) {
+        if (mCurrentPosition == mQuestionsList!!.size) {
             btn_submit.text = "FINISH"
         } else {
             btn_submit.text = "SUBMIT"
@@ -86,11 +86,11 @@ class QuizQuestionsActivity : AppCompatActivity(), OnClickListener {
                             setQuestion()
                         }
                         else -> {
-                            Toast.makeText(
-                                this,
-                                "You have successfully completed the Quiz",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            val intent = Intent(this, ResultActivity::class.java)
+                            intent.putExtra(Constants.USER_NAME, mUserName)
+                            intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionsList!!.size)
+                            startActivity(intent)
                         }
                     }
                 } else {
@@ -98,7 +98,7 @@ class QuizQuestionsActivity : AppCompatActivity(), OnClickListener {
                     if (question!!.correctAnswer != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
                     } else {
-                        mCorrectAnswer++
+                        mCorrectAnswers++
                     }
                     answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
 
